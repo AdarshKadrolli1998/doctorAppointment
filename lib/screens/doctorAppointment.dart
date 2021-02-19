@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:doctor/common/MyColors.dart';
+import 'package:doctor/screens/patientDetailScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
@@ -212,6 +213,10 @@ class _DoctorAppointmentState extends State<DoctorAppointment> {
                                                   Map<String, dynamic> item =
                                                       appointmentData[index];
                                                   return ListTile(
+                                                    onTap: (){Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(builder: (context) => PatientDetails(),),
+                                                    );},
                                                     contentPadding:
                                                         EdgeInsets.all(0),
                                                     leading: Icon(
