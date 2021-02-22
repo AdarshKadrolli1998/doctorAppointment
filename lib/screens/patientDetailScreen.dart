@@ -1,4 +1,5 @@
 import 'package:doctor/common/MyColors.dart';
+import 'package:doctor/screens/audiDemo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -78,7 +79,12 @@ class _PatientDetailsState extends State<PatientDetails> {
                       children: [
                         FlatButton(
                           padding: EdgeInsets.all(0),
-                          onPressed: () {  },
+                          onPressed: () {
+                            showModalBottomSheet(context: context, builder: (BuildContext context){
+                              return Card(child: Container(height: 600,
+                                child: RecorderExample(),),);
+                            },);
+                          },
                           child: Container(
                             height: 60,
                             width: 60,
@@ -199,4 +205,3 @@ class _PatientDetailsState extends State<PatientDetails> {
     );
   }
 }
-// CupertinoActionSheet()
