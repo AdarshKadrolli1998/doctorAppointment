@@ -81,7 +81,7 @@ class _PatientDetailsState extends State<PatientDetails> {
                           padding: EdgeInsets.all(0),
                           onPressed: () {
                             showModalBottomSheet(context: context, builder: (BuildContext context){
-                              return Card(child: Container(height: 600,
+                              return Card(child: Container(height: 500,
                                 child: RecorderExample(),),);
                             },);
                           },

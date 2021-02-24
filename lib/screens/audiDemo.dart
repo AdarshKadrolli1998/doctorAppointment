@@ -1,14 +1,38 @@
 import 'dart:async';
+
 import 'dart:io' as io;
 
-import 'package:audio_wave/audio_wave.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:doctor/common/MyColors.dart';
 import 'package:file/file.dart';
 import 'package:file/local.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
 import 'package:path_provider/path_provider.dart';
+
+import 'package:audio_wave/audio_wave.dart';
+
+class PlayIcon extends StatefulWidget {
+// int initialvalue;
+// PlayIcon(this.initialvalue);
+
+  @override
+  _MyAppState createState() => new _MyAppState();
+}
+
+class _MyAppState extends State<PlayIcon> {
+  @override
+  Widget build(BuildContext context) {
+    return new MaterialApp(
+      home: new Scaffold(
+        body: SafeArea(
+          child: new RecorderExample(),
+        ),
+      ),
+    );
+  }
+}
 
 class RecorderExample extends StatefulWidget {
   final LocalFileSystem localFileSystem;
@@ -20,177 +44,209 @@ class RecorderExample extends StatefulWidget {
   State<StatefulWidget> createState() => new RecorderExampleState();
 }
 
-class RecorderExampleState extends State<RecorderExample> {
-  bool viewVisible = false;
+class RecorderExampleState extends State<RecorderExample>
+// with SingleTickerProviderStateMixin
+{
+// AnimationController _animationController;
+// bool isPlaying = false;
+
   FlutterAudioRecorder _recorder;
   Recording _current;
   RecordingStatus _currentStatus = RecordingStatus.Unset;
+  bool viewVisible = false;
 
   @override
   void initState() {
-    // TODO: implement initState
+// TODO: implement initState
     super.initState();
+// _animationController =
+// AnimationController(vsync: this, duration: Duration(milliseconds: 450));
     _init();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(children: <Widget>[
-        Row(
-          children: [
-            Text(
-              "${_current?.duration.toString()}",
-              style: TextStyle(fontSize: 17),
-            ),
-            FlatButton(
-                padding: const EdgeInsets.only(left: 175),
-                onPressed: () {},
-                child: Text(
-                  "Save for later",
-                  style: TextStyle(color: Colors.blue, fontSize: 17),
-                ))
-          ],
-        ),
-        Row(
-          children: [
-            Container(
-                height: 250,
-                width: 400,
-                child: Visibility(
-                  maintainSize: true,
-                  maintainAnimation: true,
-                  maintainState: true,
-                  visible: viewVisible,
-                  child: AudioWave(
-                    height: 200,
-                    spacing: 1.5,
-                    width: 400,
-                    bars: [
-                      AudioWaveBar(height: 10, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 30, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 60, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 40, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 20, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 10, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 30, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 60, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 40, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 20, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 10, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 30, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 60, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 40, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 20, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 10, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 30, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 60, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 40, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 20, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 10, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 30, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 60, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 40, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 20, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 10, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 30, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 60, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 40, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 20, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 10, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 30, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 60, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 40, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 20, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 10, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 30, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 60, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 40, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 20, color: Colors.lightBlueAccent),
-                      AudioWaveBar(height: 10, color: Colors.lightBlueAccent),
+    return ListView(
+      children: [
+        new Center(
+          child: new Padding(
+            padding: new EdgeInsets.all(8.0),
+            child: new Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text("Audio recording : ${_current?.duration.toString()}"),
+                      FlatButton(
+                          onPressed: _currentStatus != RecordingStatus.Unset ? _stop : null,
+                          child: Text(
+                            "Save for Later",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: MyColors.themeColor,
+                                fontSize: 20),
+                          ))
                     ],
                   ),
-                )
-            )
-          ],
+                  Row(
+                    // mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        color: Colors.lightBlue[50],
+                        child: Visibility(
+                          maintainSize: true,
+                          maintainAnimation: true,
+                          maintainState: true,
+                          visible: viewVisible,
+                          child: AudioWave(
+                            height: 150,
+                            width: 387,
+                            spacing: 2.5,
+                            bars: [
+                              AudioWaveBar(height: 20, color: MyColors.themeColor),
+                              AudioWaveBar(height: 40, color: MyColors.themeColor),
+                              AudioWaveBar(height: 50, color: MyColors.themeColor),
+                              AudioWaveBar(height: 70, color: MyColors.themeColor),
+                              AudioWaveBar(height: 50, color: MyColors.themeColor),
+                              AudioWaveBar(height: 40, color: MyColors.themeColor),
+                              AudioWaveBar(height: 20, color: MyColors.themeColor),
+                              AudioWaveBar(height: 40, color: MyColors.themeColor),
+                              AudioWaveBar(height: 50, color: MyColors.themeColor),
+                              AudioWaveBar(height: 70, color: MyColors.themeColor),
+                              AudioWaveBar(height: 50, color: MyColors.themeColor),
+                              AudioWaveBar(height: 40, color: MyColors.themeColor),
+                              AudioWaveBar(height: 20, color: MyColors.themeColor),
+                              AudioWaveBar(height: 40, color: MyColors.themeColor),
+                              AudioWaveBar(height: 50, color: MyColors.themeColor),
+                              AudioWaveBar(height: 70, color: MyColors.themeColor),
+                              AudioWaveBar(height: 50, color: MyColors.themeColor),
+                              AudioWaveBar(height: 40, color: MyColors.themeColor),
+                              AudioWaveBar(height: 20, color: MyColors.themeColor),
+                              AudioWaveBar(height: 40, color: MyColors.themeColor),
+                              AudioWaveBar(height: 50, color: MyColors.themeColor),
+                              AudioWaveBar(height: 70, color: MyColors.themeColor),
+                              AudioWaveBar(height: 50, color: MyColors.themeColor),
+                              AudioWaveBar(height: 40, color: MyColors.themeColor),
+                              AudioWaveBar(height: 20, color: MyColors.themeColor),
+                              AudioWaveBar(height: 40, color: MyColors.themeColor),
+                              AudioWaveBar(height: 50, color: MyColors.themeColor),
+                              AudioWaveBar(height: 70, color: MyColors.themeColor),
+                              AudioWaveBar(height: 50, color: MyColors.themeColor),
+                              AudioWaveBar(height: 40, color: MyColors.themeColor),
+                              AudioWaveBar(height: 20, color: MyColors.themeColor),
+                              AudioWaveBar(height: 40, color: MyColors.themeColor),
+                              AudioWaveBar(height: 50, color: MyColors.themeColor),
+                              AudioWaveBar(height: 70, color: MyColors.themeColor),
+                              AudioWaveBar(height: 50, color: MyColors.themeColor),
+                              AudioWaveBar(height: 40, color: MyColors.themeColor),
+                              AudioWaveBar(height: 20, color: MyColors.themeColor),
+                              AudioWaveBar(height: 40, color: MyColors.themeColor),
+                              AudioWaveBar(height: 50, color: MyColors.themeColor),
+                              AudioWaveBar(height: 70, color: MyColors.themeColor),
+                              AudioWaveBar(height: 50, color: MyColors.themeColor),
+                              AudioWaveBar(height: 40, color: MyColors.themeColor),
+                              AudioWaveBar(height: 20, color: MyColors.themeColor),
+                              AudioWaveBar(height: 40, color: MyColors.themeColor),
+                              AudioWaveBar(height: 50, color: MyColors.themeColor),
+                              AudioWaveBar(height: 70, color: MyColors.themeColor),
+                              AudioWaveBar(height: 50, color: MyColors.themeColor),
+                              AudioWaveBar(height: 40, color: MyColors.themeColor),
+                              AudioWaveBar(height: 20, color: MyColors.themeColor),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FlatButton(
+                          onPressed: () {
+                            switch (_currentStatus) {
+                              case RecordingStatus.Initialized:
+                                {
+                                  _start();
+                                  break;
+                                }
+                              case RecordingStatus.Recording:
+                                {
+                                  _pause();
+                                  break;
+                                }
+                              case RecordingStatus.Paused:
+                                {
+                                  _resume();
+                                  break;
+                                }
+                              case RecordingStatus.Stopped:
+                                {
+                                  _init();
+                                  break;
+                                }
+                              default:
+                                break;
+                            }
+                          },
+                          child: CircleAvatar(
+                            backgroundColor: MyColors.themeColor,
+                            child: _buildText(_currentStatus),
+                            radius: 30,
+                          ),
+                        ),
+                      ),
+                      FlatButton(
+                        onPressed:(){},
+                        child: Icon(Icons.cloud_upload,size: 75,color: MyColors.themeColor,)
+                      ),
+                      CircleAvatar(
+                        backgroundColor: Colors.white54,
+                        child: Icon(Icons.delete,color: Colors.red,size: 50,),
+                        radius: 35,
+                      ),
+                      // FlatButton(
+                      //   onPressed:
+                      //       _currentStatus != RecordingStatus.Unset ? _stop : null,
+                      //   child: CircleAvatar(
+                      //     child: Icon(
+                      //       Icons.play_circle_fill,
+                      //       size: 40,
+                      //     ),
+                      //     radius: 40,
+                      //   ),
+                      // ),
+                    ],
+                  ),
+                ]),
+          ),
         ),
-        Row(
-          children: <Widget>[
-            FlatButton(
-              onPressed: () {
-                switch (_currentStatus) {
-                  case RecordingStatus.Initialized:
-                    {
-                      _start();
-                      break;
-                    }
-                  case RecordingStatus.Recording:
-                    {
-                      _pause();
-                      break;
-                    }
-                  case RecordingStatus.Paused:
-                    {
-                      _resume();
-                      break;
-                    }
-                  case RecordingStatus.Stopped:
-                    {
-                      _init();
-                      break;
-                    }
-                  default:
-                    break;
-                }
-              },
-              child: Container(
-                height: 50,
-                width: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color: Colors.lightBlue,
-                ),
-                child: _buildText(_currentStatus),
-              ),
-            ),
-            FlatButton(
-              onPressed: _currentStatus != RecordingStatus.Unset ? _stop : null,
-              child: Container(
-                height: 50,
-                width: 50,
-                decoration: BoxDecoration(
-                  color: Colors.blueAccent.withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Icon(Icons.stop, color: Colors.white),
-              ),
-            ),
-          ],
-        ),
-      ]),
+      ],
     );
   }
 
   _init() async {
     try {
+      viewVisible = false;
       if (await FlutterAudioRecorder.hasPermissions) {
         String customPath = '/flutter_audio_recorder_';
         io.Directory appDocDirectory;
-//        io.Directory appDocDirectory = await getApplicationDocumentsDirectory();
+        // io.Directory appDocDirectory = await getApplicationDocumentsDirectory();
         if (io.Platform.isIOS) {
           appDocDirectory = await getApplicationDocumentsDirectory();
         } else {
           appDocDirectory = await getExternalStorageDirectory();
         }
-
         // can add extension like ".mp4" ".wav" ".m4a" ".aac"
         customPath = appDocDirectory.path +
             customPath +
             DateTime.now().millisecondsSinceEpoch.toString();
 
-        // .wav <---> AudioFormat.WAV
-        // .mp4 .m4a .aac <---> AudioFormat.AAC
-        // AudioFormat is optional, if given value, will overwrite path extension when there is conflicts.
+          // .wav <---> AudioFormat.WAV
+          // .mp4 .m4a .aac <---> AudioFormat.AAC
+          // AudioFormat is optional, if given value, will overwrite path extension when there is conflicts.
         _recorder =
             FlutterAudioRecorder(customPath, audioFormat: AudioFormat.WAV);
 
@@ -218,8 +274,8 @@ class RecorderExampleState extends State<RecorderExample> {
       await _recorder.start();
       var recording = await _recorder.current(channel: 0);
       setState(() {
-        _current = recording;
         viewVisible = true;
+        _current = recording;
       });
 
       const tick = const Duration(milliseconds: 50);
@@ -232,7 +288,7 @@ class RecorderExampleState extends State<RecorderExample> {
         // print(current.status);
         setState(() {
           _current = current;
-          _currentStatus = _current.status;
+          _currentStatus = current.status;
         });
       });
     } catch (e) {
@@ -261,9 +317,9 @@ class RecorderExampleState extends State<RecorderExample> {
     File file = widget.localFileSystem.file(result.path);
     print("File length: ${await file.length()}");
     setState(() {
+      viewVisible = false;
       _current = result;
       _currentStatus = _current.status;
-      viewVisible = false;
     });
   }
 
@@ -272,7 +328,7 @@ class RecorderExampleState extends State<RecorderExample> {
     switch (_currentStatus) {
       case RecordingStatus.Initialized:
         {
-          icon = Icons.play_arrow;
+          icon = Icons.not_started;
           break;
         }
       case RecordingStatus.Recording:
@@ -287,16 +343,13 @@ class RecorderExampleState extends State<RecorderExample> {
         }
       case RecordingStatus.Stopped:
         {
-          icon = Icons.not_started;
+          icon = Icons.stop_outlined;
           break;
         }
       default:
         break;
     }
-    return Icon(
-      icon,
-      color: Colors.white,
-    );
+    return Icon(icon, color: Colors.white,size: 40,);
   }
 
   void onPlayAudio() async {
