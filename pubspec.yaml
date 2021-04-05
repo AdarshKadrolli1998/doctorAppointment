@@ -37,6 +37,11 @@ dependencies:
   flutter_audio_recorder: ^0.5.5
   wave: ^0.1.0
   audio_wave: ^0.0.3
+  rflutter_alert: ^1.0.3
+  http:
+  provider:
+  audio_manager:
+  flutter_fft:
 
 dev_dependencies:
   flutter_test:

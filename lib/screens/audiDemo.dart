@@ -77,16 +77,19 @@ class RecorderExampleState extends State<RecorderExample>
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text("Audio recording : ${_current?.duration.toString()}"),
-                      FlatButton(
-                          onPressed: _currentStatus != RecordingStatus.Unset ? _stop : null,
-                          child: Text(
-                            "Save for Later",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: MyColors.themeColor,
-                                fontSize: 20),
-                          ))
+                      Text("${_current?.duration.toString()}"),
+                      Container(
+                        margin: EdgeInsets.only(left: 130),
+                        child: FlatButton(
+                            onPressed: _currentStatus != RecordingStatus.Unset ? _stop : null,
+                            child: Text(
+                              "Save for Later",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: MyColors.themeColor,
+                                  fontSize: 20),
+                            )),
+                      )
                     ],
                   ),
                   Row(
@@ -102,7 +105,7 @@ class RecorderExampleState extends State<RecorderExample>
                           child: AudioWave(
                             height: 150,
                             width: 387,
-                            spacing: 2.5,
+                            spacing: 0.0,
                             bars: [
                               AudioWaveBar(height: 20, color: MyColors.themeColor),
                               AudioWaveBar(height: 40, color: MyColors.themeColor),
@@ -160,7 +163,7 @@ class RecorderExampleState extends State<RecorderExample>
                     ],
                   ),
                   Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -199,25 +202,49 @@ class RecorderExampleState extends State<RecorderExample>
                         ),
                       ),
                       FlatButton(
-                        onPressed:(){},
-                        child: Icon(Icons.cloud_upload,size: 75,color: MyColors.themeColor,)
+                          onPressed:
+                              (){
+                            showModalBottomSheet(context: context, builder: (BuildContext context){
+                              return Card(child: Container(height: 220,
+                                padding:EdgeInsets.all(10),
+                                child: Column(
+                                  // mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.cloud_upload,size: 75,color: MyColors.themeColor,),
+                                    SizedBox(height: 10,),
+                                    Text("Upload this dictation for transcription?",style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold,color: Colors.black),),
+                                    SizedBox(height: 25,),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Container(
+                                          child: RaisedButton(
+                                            onPressed: (){},
+                                            child: Text("cancel", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.blue),),
+                                          ),
+                                        ),
+                                        Container(
+                                          child: RaisedButton(
+                                            onPressed: (){},
+                                            child: Text("Upload", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.white54),),
+                                            color: Colors.green,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                              );
+                            },);
+                          },
+                          child: Icon(Icons.cloud_upload,size:75,color: MyColors.themeColor,)
                       ),
                       CircleAvatar(
                         backgroundColor: Colors.white54,
                         child: Icon(Icons.delete,color: Colors.red,size: 50,),
                         radius: 35,
                       ),
-                      // FlatButton(
-                      //   onPressed:
-                      //       _currentStatus != RecordingStatus.Unset ? _stop : null,
-                      //   child: CircleAvatar(
-                      //     child: Icon(
-                      //       Icons.play_circle_fill,
-                      //       size: 40,
-                      //     ),
-                      //     radius: 40,
-                      //   ),
-                      // ),
                     ],
                   ),
                 ]),
@@ -357,3 +384,4 @@ class RecorderExampleState extends State<RecorderExample>
     await audioPlayer.play(_current.path, isLocal: true);
   }
 }
+
